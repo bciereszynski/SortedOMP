@@ -11,6 +11,6 @@ set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS
 set(CMAKE_CXX_STANDARD 23)
 
 add_executable(SortedOMP main.cpp
-        quicksort.h
-        quicksort.cpp)
+        quicksort.cpp
+        mergesort.cpp)
 target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_C)
