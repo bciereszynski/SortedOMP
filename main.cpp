@@ -3,6 +3,7 @@
 #include <random>
 #include <chrono>
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <omp.h>
 #include "quicksort.h"
 
@@ -10,13 +11,14 @@
 
 int main()
 {
-    const size_t arraySize = 100000000;
-    const bool verbose = true;
+    constexpr size_t arraySize = 100000000;
+    constexpr bool verbose = true;
 
     int32_t* numbers = new int32_t[arraySize];
     int32_t* numbers_serial = new int32_t[arraySize];
 
-    // Generowanie tablicy liczb 32-bitowych
+
+    // data generation
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, INT32_MAX);
@@ -29,7 +31,7 @@ int main()
     if (verbose) {
         std::cout << "Starting quicksort parallel..." <<std::endl;
     }
-    auto start_parallel = std::chrono::high_resolution_clock::now();
+    const auto start_parallel = std::chrono::high_resolution_clock::now();
     #pragma omp parallel default(none) shared(numbers, arraySize) num_threads(6)
     {
         #pragma omp single nowait
@@ -37,6 +39,7 @@ int main()
     }
     auto end_parallel = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed_parallel = end_parallel - start_parallel;
+    const auto end_parallel = std::chrono::high_resolution_clock::now();
     std::cout<< elapsed_parallel.count() << std::endl;
 
     if (verbose) {
@@ -47,6 +50,9 @@ int main()
     quicksort_serial(numbers_serial, 0, arraySize - 1);
     auto end_serial = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed_serial = end_serial - start_serial;
+    const auto start_serial = std::chrono::high_resolution_clock::now();
+    const auto end_serial = std::chrono::high_resolution_clock::now();
+    const std::chrono::duration<double> elapsed_serial = end_serial - start_serial;
     std::cout<< elapsed_serial.count() << std::endl;
 
     if (verbose) {
