@@ -1,9 +1,7 @@
-//
-// Created by bcier on 1/8/2025.
-//
 #include "quicksort.h"
 #include <algorithm>
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <omp.h>
 
 long partition(int * __restrict__ A, const long low, const long high) {
