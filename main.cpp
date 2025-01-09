@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdint>
+#include <string>
 #include <random>
 #include <chrono>
 
@@ -10,10 +11,36 @@
 #include "quicksort.h"
 
 
-int main()
+int main(int argc, char* argv[])
 {
-    constexpr size_t arraySize = 100000000;
-    constexpr bool verbose = true;
+    long arraySize = 1000000;
+    bool verbose = false;
+    int cutoffMerge = 1000;
+    int cutoffQuick = 1000;
+
+    // arguments parse
+    {
+        for (int i = 1; i < argc; ++i) {
+            std::string arg = argv[i];
+            if (arg == "--size" && i + 1 < argc) {
+                arraySize = std::stol(argv[++i]);
+            } else if (arg == "--verbose" && i + 1 < argc) {
+                std::string value = argv[++i];
+                verbose = (value == "true" || value == "1");
+            } else if (arg == "--cutoff" && i + 1 < argc) {
+                cutoffMerge = std::stoi(argv[++i]);
+                cutoffQuick = cutoffMerge;
+            } else if (arg == "--cutoff_merge" && i + 1 < argc) {
+                cutoffMerge = std::stoi(argv[++i]);
+            } else if (arg == "--cutoff_quick" && i + 1 < argc) {
+                cutoffQuick = std::stoi(argv[++i]);
+            }
+            else {
+                std::cerr << "Argument error: " << arg << std::endl;
+                return 1;
+            }
+        }
+    }
 
     auto* numbers_serial_merge = new int32_t[arraySize];
     auto* numbers_serial_quick = new int32_t[arraySize];
@@ -42,10 +69,10 @@ int main()
             std::cout << "Starting quicksort parallel..." <<std::endl;
         }
         const auto start_parallel = std::chrono::high_resolution_clock::now();
-        #pragma omp parallel default(none) shared(numbers_quick, arraySize) num_threads(6)
+        #pragma omp parallel default(none) shared(numbers_quick) firstprivate(arraySize, cutoffQuick) num_threads(6)
         {
         #pragma omp single nowait
-            quicksort_parallel(numbers_quick, 0, arraySize - 1);
+            quicksort_parallel(numbers_quick, 0, arraySize - 1, cutoffQuick);
         }
         const auto end_parallel = std::chrono::high_resolution_clock::now();
         const std::chrono::duration<double> elapsed_parallel = end_parallel - start_parallel;
@@ -71,10 +98,10 @@ int main()
             std::cout << "Starting mergesort parallel..." << std::endl;
         }
         const auto start_parallel = std::chrono::high_resolution_clock::now();
-        #pragma omp parallel default(none) shared(numbers_merge, arraySize) num_threads(6)
+        #pragma omp parallel default(none) shared(numbers_merge) firstprivate(arraySize, cutoffMerge) num_threads(6)
         {
         #pragma omp single nowait
-            mergesort_parallel(numbers_merge, 0, arraySize - 1);
+            mergesort_parallel(numbers_merge, 0, arraySize - 1, cutoffMerge);
         }
         const auto end_parallel = std::chrono::high_resolution_clock::now();
         const std::chrono::duration<double> elapsed_parallel = end_parallel - start_parallel;
