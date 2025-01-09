@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cstdint>
 #include <random>
+#include <chrono>
 
+#include <omp.h>
 #include "quicksort.h"
 
 
@@ -9,7 +11,8 @@
 int main()
 {
     const size_t arraySize = 100000000;
-    const bool verbose = false;
+    const bool verbose = true;
+
     int32_t* numbers = new int32_t[arraySize];
     int32_t* numbers_serial = new int32_t[arraySize];
 
@@ -21,10 +24,7 @@ int main()
     std::copy_n(numbers, arraySize, numbers_serial);
 
     if (verbose) {
-        std::cout << "Generated array:" << std::endl;
-        for (std::size_t i = 0; i < arraySize; ++i) {
-            std::cout << i << ": " << numbers[i] << std::endl;
-        }
+        std::cout << "Starting quicksort serial" <<std::endl;
     }
 
     auto start_serial = std::chrono::high_resolution_clock::now();
