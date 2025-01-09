@@ -16,10 +16,13 @@ int main()
     int32_t* numbers = new int32_t[arraySize];
     int32_t* numbers_serial = new int32_t[arraySize];
 
-    std::srand(std::time(nullptr));
+    // Generowanie tablicy liczb 32-bitowych
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, INT32_MAX);
 
     for (std::size_t i = 0; i < arraySize; ++i) {
-        numbers[i] = std::rand();
+        numbers[i] = dis(gen);
     }
     std::copy_n(numbers, arraySize, numbers_serial);
 
