@@ -27,7 +27,7 @@ int main()
         std::cout << "Starting quicksort parallel" <<std::endl;
     }
     auto start_parallel = std::chrono::high_resolution_clock::now();
-    #pragma omp parallel default(none) shared(numbers, arraySize)
+    #pragma omp parallel default(none) shared(numbers, arraySize) num_threads(6)
     {
         #pragma omp single nowait
         quicksort_parallel(numbers, 0, arraySize - 1);
