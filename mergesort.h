@@ -1,7 +1,3 @@
-//
-// Created by bcier on 1/8/2025.
-//
-
 #ifndef MERGESORT_H
 #define MERGESORT_H
 void mergesort_serial(int * __restrict__ A, long low, long high);

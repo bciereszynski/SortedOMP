@@ -1,6 +1,3 @@
-//
-// Created by bcier on 1/9/2025.
-//
 #include "mergesort.h"
 
 // ReSharper disable once CppUnusedIncludeDirective
