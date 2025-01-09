@@ -67,10 +67,12 @@ void mergesort_parallel(int * __restrict__ A, const long low, const long high, c
         return;
     if (high-low<cutoff)
         return mergesort_serial(A,low,high);
-    long m = low + (high - low) / 2;
+    const long m = low + (high - low) / 2;
     #pragma omp task default(none) firstprivate(low,m,A,cutoff)
     mergesort_parallel(A,low,m);
     #pragma omp task default(none) firstprivate(high,m,A,cutoff)
     mergesort_parallel(A,m+1,high);
+
+    #pragma omp taskwait
     merge(A, low, m, high);
 }
