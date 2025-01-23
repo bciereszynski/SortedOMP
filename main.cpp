@@ -15,8 +15,8 @@ int main(int argc, char* argv[])
 {
     long arraySize = 1000000;
     bool verbose = false;
-    int cutoffMerge = 1000;
-    int cutoffQuick = 1000;
+    int cutoffMerge = 3000;
+    int cutoffQuick = 3000;
 
     // arguments parse
     {
@@ -151,5 +151,7 @@ int main(int argc, char* argv[])
 
     delete[] numbers_serial_quick;
     delete[] numbers_quick;
+    delete[] numbers_serial_merge;
+    delete[] numbers_merge;
     return 0;
 }
