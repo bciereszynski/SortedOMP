@@ -5,7 +5,7 @@
 #include <omp.h>
 
 long partition(int * __restrict__ A, const long low, const long high) {
-    int pivot=A[high];
+    const int pivot=A[high];
     long i=low-1;
     for (long j=low;j<=high-1;j++) {
         if (A[j] < pivot) {
@@ -31,11 +31,12 @@ void quicksort_parallel(int * __restrict__ A, const long low, const long high, c
         return;
     if (high-low<cutoff)
         return quicksort_serial(A,low,high);
-    long p=partition(A,low,high);
+    const long p=partition(A,low,high);
     #pragma omp task default(none) firstprivate(low,p,A,cutoff)
     quicksort_parallel(A,low,p-1,cutoff);
     #pragma omp task default(none) firstprivate(high,p,A,cutoff)
     quicksort_parallel(A,p+1,high,cutoff);
+    #pragma omp taskwait
 }
 
 
